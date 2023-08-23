@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 class RidgeReg:
     def __init__(self,alpha):
@@ -9,16 +8,17 @@ class RidgeReg:
 
     # x,y: Dataframe
     def fit(self,x,y):
-        alpha = self.alpha
         x_c = x.copy()
+        # add feature with all 1
         x_c['1'] = 1
         
         transposed = x_c.transpose() # S^T
         sts = np.dot(transposed,x_c) # S^T.S
-        alpha_I = alpha*np.identity(len(sts)) # AI
+        alpha_I = self.alpha*np.identity(len(sts)) # AI
         alpha_I_sts = alpha_I+sts # AI+S^T.S
         inverted = np.linalg.inv(alpha_I_sts) # (AI+S^T.S)^-1
         w = inverted.dot(transposed).dot(y) # ((AI+S^T.S)^-1).S^T.y
+        # save results
         self.w0 = w[len(w)-1]
         self.w = w[:len(w)-1]
     
